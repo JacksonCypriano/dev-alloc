@@ -681,3 +681,73 @@ A classe `Technology` tem o seguinte campo:
     "name": "Python"
 }
 ```
+
+
+# Documentação dos Testes de Alocação de Projetos
+
+## Objetivo
+Este conjunto de testes visa validar a alocação de programadores em projetos, levando em consideração as tecnologias requeridas, o período do projeto, e o limite de horas. Os testes verificam as regras de negócio implementadas nos modelos de **ProjectAllocation** e **Programmer**. 
+
+## Testes
+
+### 1. `test_developer_technology_validation`
+Este teste valida se o desenvolvedor possui a tecnologia necessária para o projeto. Se o desenvolvedor tiver a tecnologia correta, a alocação do projeto será permitida. Caso contrário, uma exceção `ValidationError` será gerada.
+
+### 2. `test_developer_technology_validation_serializer`
+Aqui, testamos a validação usando o serializador para garantir que a alocação será aceita se o desenvolvedor tiver as tecnologias necessárias para o projeto. O serializador valida corretamente os dados fornecidos antes de permitir a alocação.
+
+### 3. `test_developer_technology_validation_invalid`
+Este teste verifica o caso em que um desenvolvedor não possui a tecnologia necessária para o projeto. Quando isso acontece, uma exceção `ValidationError` é levantada, informando que o desenvolvedor não possui a tecnologia necessária para o projeto.
+
+### 4. `test_developer_technology_validation_invalid_serializer`
+Testa o comportamento do serializador quando o desenvolvedor não tem as tecnologias exigidas para o projeto. Nesse caso, o serializador irá falhar na validação e não permitirá a criação da alocação.
+
+### 5. `test_allocation_outside_project_period`
+Valida que não é possível alocar um desenvolvedor fora do período de execução do projeto. Se a alocação estiver fora do intervalo de datas do projeto, uma exceção `ValidationError` será gerada.
+
+### 6. `test_allocation_outside_project_period_serializer`
+Verifica a validação do serializador quando se tenta alocar um desenvolvedor fora do período do projeto. O serializador também levanta um erro de validação se a alocação ocorrer fora das datas definidas para o projeto.
+
+### 7. `setUp_hours_limit`
+Este teste configura uma alocação de projeto com um limite de horas para um desenvolvedor, que deve ser respeitado durante a alocação. O objetivo é garantir que o número de horas alocadas seja controlado corretamente.
+
+### 8. `test_hours_limit_exceeded`
+Verifica se o sistema corretamente rejeita uma alocação de horas que exceda o limite estabelecido para o projeto. Se o número de horas alocadas for superior ao limite, uma exceção `ValidationError` será gerada.
+
+### 9. `test_hours_limit_exceeded_serializer`
+Este teste valida o comportamento do serializador quando o limite de horas do projeto é ultrapassado. O serializador irá levantar uma exceção de `ValidationError`, garantindo que o total de horas alocadas não ultrapasse o limite de horas definido para o projeto.
+
+## Resumo
+Esses testes cobrem as principais validações envolvidas na alocação de programadores em projetos, incluindo verificação de tecnologias requeridas, período de alocação, e limites de horas. Eles garantem que as regras de negócio sejam respeitadas, evitando alocações inválidas ou inconsistentes.
+
+
+
+# Documentação da Tarefa Agendada: `mark_project_as_late`
+
+## Objetivo
+A tarefa `mark_project_as_late` é uma tarefa assíncrona configurada para ser executada automaticamente utilizando o **Celery**. O objetivo dessa tarefa é marcar projetos como "atrasados" (status `LATE`) quando a data atual for posterior à data de término do projeto e o status atual do projeto não for `LATE` ou `DONE`. Essa tarefa é programada para ser executada automaticamente de acordo com uma agenda definida no Celery Beat.
+
+## Funcionamento
+
+### 1. **Verificação de Projetos Atrasados**
+A tarefa percorre todos os projetos no banco de dados que não estão com o status `LATE` ou `DONE` (excluindo esses status) e verifica se a data atual (`now.date()`) é maior que a data de término do projeto (`project.end_date`). Se o projeto estiver atrasado, o status do projeto é alterado para `LATE`, e a mudança é salva no banco de dados.
+
+### 2. **Configuração do Celery Beat**
+A tarefa `mark_project_as_late` é configurada no **Celery Beat** para ser executada de forma automática de acordo com a seguinte programação:
+
+```python
+CELERY_BEAT_SCHEDULE = {
+    "mark_project_as_late": {
+        "task": "apps.projects.tasks.mark_project_as_late",
+        "schedule": crontab(hour=0, minute=0, day_of_week='*'),
+    }
+}
+```
+
+Com isso, a tarefa será executada todos os dias à meia-noite (`00:00`), sem restrição de dia da semana. Isso garante que a verificação dos projetos atrasados seja feita diariamente, sem a necessidade de intervenção manual.
+
+### 3. **Log de Execução**
+Um logger é configurado para essa tarefa, mas ele não está sendo usado explicitamente no código. Para futuros aprimoramentos, poderia ser interessante adicionar logs informando quando um projeto foi atualizado para o status `LATE`, garantindo melhor rastreabilidade da execução da tarefa.
+
+## Resumo
+A tarefa `mark_project_as_late` é uma tarefa agendada do Celery que verifica periodicamente os projetos e os marca como "atrasados" caso o projeto tenha ultrapassado a data de término. A tarefa é executada automaticamente todos os dias à meia-noite, de acordo com a configuração no Celery Beat.

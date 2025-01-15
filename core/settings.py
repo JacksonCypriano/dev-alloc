@@ -175,5 +175,15 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
+        'django.db.backends': {
+            'level': 'INFO',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'your_project_name': {
+            'level': 'INFO',
+            'handlers': ['console'],
+            'propagate': True,
+        },
     },
 }

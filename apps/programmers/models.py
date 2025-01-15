@@ -12,7 +12,7 @@ class Programmer(models.Model):
         return self.technology or []
 
     def set_technology_list(self, technology_list):
-        valid_technologies = []
+        valid_technologies = self.get_technology_list()
 
         for technology in technology_list:
             if isinstance(technology, str):

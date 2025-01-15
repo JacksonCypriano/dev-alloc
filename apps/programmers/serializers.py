@@ -10,7 +10,7 @@ class ProgrammerSerializer(serializers.ModelSerializer):
 
     def get_technology(self, obj):
         return [
-            tech['name'] if isinstance(tech, dict) else tech.name 
+            tech['name'] if isinstance(tech, dict) else tech 
             for tech in obj.technology
         ]
 

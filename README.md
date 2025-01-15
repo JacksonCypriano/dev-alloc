@@ -92,6 +92,62 @@ O arquivo `Dockerfile` é utilizado para construir a imagem do contêiner que ir
 - **Rodar os testes**: `docker-compose exec web python manage.py test`
 - **Acessar o Django shell**: `docker-compose exec web python manage.py shell`
 
+# Como Usar o Arquivo `requests_insomnia.json` no Insomnia
+
+Este guia explica como importar e usar o arquivo `requests_insomnia.json` no aplicativo Insomnia para facilitar o teste das requisições de API do seu projeto.
+
+## Requisitos
+
+- **Insomnia**: Se ainda não tiver, faça o download e instale a partir do [site oficial do Insomnia](https://insomnia.rest/download).
+- **Arquivo JSON de Requisições**: O arquivo `requests_insomnia.json` contém as requisições que você pode importar para o Insomnia e começar a usar imediatamente.
+
+## Passos para Importar o Arquivo no Insomnia
+
+1. **Abra o Insomnia**:
+   - Se você ainda não tiver o Insomnia instalado, baixe e instale a versão adequada para o seu sistema operacional.
+   - Abra o Insomnia após a instalação.
+
+2. **Importar o Arquivo `requests_insomnia.json`**:
+   - Após abrir o Insomnia, vá até o **menu principal**.
+   - Selecione **"Import"** no canto superior esquerdo ou clique em **File > Import**.
+   - Na janela de importação, clique na opção **"From File"**.
+   - Navegue até o local onde você salvou o arquivo `requests_insomnia.json` e selecione-o.
+   - O Insomnia irá automaticamente importar todas as requisições contidas no arquivo.
+
+3. **Explorar as Requisições Importadas**:
+   - Após a importação, as requisições serão exibidas em um novo **Workspace** (Espaço de Trabalho) dentro do Insomnia.
+   - Você poderá ver todas as requisições da API que foram definidas no arquivo JSON.
+   - Cada requisição estará organizada de acordo com os métodos HTTP (GET, POST, PUT, DELETE, etc.) e a URL correspondente.
+
+4. **Editar as Requisições (Opcional)**:
+   - Se necessário, você pode editar os detalhes de cada requisição. 
+   - Basta clicar em uma requisição específica, onde você pode modificar parâmetros, cabeçalhos, corpo da requisição e outros dados conforme necessário para testar a API no seu ambiente.
+
+5. **Executar as Requisições**:
+   - Para executar uma requisição, selecione a requisição desejada e clique em **Send**.
+   - O Insomnia irá enviar a requisição para o servidor da API e exibir a resposta na parte inferior da tela.
+   - Você pode visualizar o status da resposta, os cabeçalhos, o corpo da resposta e outros detalhes úteis.
+
+## Como Contribuir
+
+Se você adicionar novas requisições ou atualizar as existentes no Insomnia, lembre-se de exportá-las novamente para que a equipe possa manter o arquivo `requests_insomnia.json` atualizado. Para exportar suas requisições:
+
+1. No Insomnia, vá até o **menu principal**.
+2. Selecione **Export Data**.
+3. Escolha a opção **Export as JSON** e salve o arquivo.
+
+Depois, faça o commit do novo arquivo JSON no repositório Git para compartilhar as atualizações.
+
+## Problemas Comuns
+
+- **Problemas de Autenticação**: Se suas requisições envolvem autenticação (como tokens ou cabeçalhos de autorização), certifique-se de que os valores corretos estejam configurados nas variáveis de ambiente ou dentro da requisição antes de enviá-la.
+- **Erros de Formato de Dados**: Se você modificar as requisições manualmente, verifique se os dados da requisição estão no formato esperado pela API.
+
+## Conclusão
+
+Seguindo esses passos, você poderá importar e usar o arquivo `requests_insomnia.json` no Insomnia para testar as APIs do seu projeto de forma eficiente. Com isso, você poderá fazer requisições de forma rápida e verificar as respostas para garantir que sua API esteja funcionando corretamente.
+
+
 # Documentação - UserViewSet
 
 Este documento descreve como utilizar o endpoint gerenciado pela classe `UserViewSet`, que fornece operações CRUD para o modelo de usuário no Django. Abaixo estão detalhadas as rotas disponíveis, parâmetros aceitos e comportamentos esperados.

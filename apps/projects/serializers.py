@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Project, ProjectAllocation
 from apps.choices import ProjectStatus
+from apps.utils.utils import validate_date
 from django.utils import timezone
 from decimal import Decimal
 from django.db.models import Sum
@@ -8,7 +9,9 @@ from datetime import datetime
 
 class ProjectSerializer(serializers.ModelSerializer):
     required_technologies = serializers.JSONField()
-    status = serializers.ChoiceField(choices=ProjectStatus.choices)
+    status = serializers.ChoiceField(choices=ProjectStatus.choices, required=False)
+    start_date = serializers.CharField()
+    end_date = serializers.CharField()
 
     class Meta:
         model = Project
@@ -22,6 +25,11 @@ class ProjectSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(f"Each technology must be a string, got {type(tech)}.")
         return value
 
+    def validate_start_date(self, value):
+        return validate_date(value)
+
+    def validate_end_date(self, value):
+        return validate_date(value)
 
 class ProjectAllocationSerializer(serializers.ModelSerializer):
     class Meta:

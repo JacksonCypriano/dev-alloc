@@ -14,8 +14,6 @@ services:
       - "8000:8000"
     depends_on:
       - db
-      - celery
-      - celery_beat
     environment:
       - PYTHONUNBUFFERED=1
     env_file:
@@ -29,32 +27,6 @@ services:
       - .env
     ports:
       - "5432:5432"
-    restart: always
-
-  celery:
-    build: .
-    command: celery -A core worker --loglevel=info
-    volumes:
-      - .:/app
-    depends_on:
-      - db
-      - redis
-    env_file:
-      - .env
-
-  celery_beat:
-    build: .
-    command: celery -A core beat --loglevel=info
-    volumes:
-      - .:/app
-    depends_on:
-      - db
-      - redis
-    env_file:
-      - .env
-
-  redis:
-    image: redis:alpine
     restart: always
 
 volumes:

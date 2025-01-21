@@ -135,24 +135,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Configurações do Celery
-CELERY_BROKER_URL = config('CELERY_BROKER_URL')
-CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND')
-CELERY_NAMESPACE = 'core'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'
-CELERY_BEAT_SCHEDULE_FILENAME = config('CELERY_BEAT_SCHEDULE_FILENAME')
-CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
-
-CELERY_BEAT_SCHEDULE = {
-    "mark_project_as_late": {
-        "task": "apps.projects.tasks.mark_project_as_late",
-        "schedule": crontab(hour=0, minute=0, day_of_week='*'),
-    }
-}
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

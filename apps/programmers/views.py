@@ -32,28 +32,6 @@ class ProgrammerViewSet(viewsets.ModelViewSet):
 
         return queryset
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            self.perform_create(serializer)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def retrieve(self, request, *args, **kwargs):
-        programmer = self.get_object()
-        serializer = self.get_serializer(programmer)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
     def update(self, request, *args, **kwargs):
         programmer = self.get_object()
         serializer = self.get_serializer(programmer, data=request.data, partial=False)
@@ -94,23 +72,8 @@ class ProgrammerViewSet(viewsets.ModelViewSet):
                         {"error": f"The technology '{tech_name}' does not exist. Please create it before assigning."},
                         status=status.HTTP_400_BAD_REQUEST
                     )
-            logger.warning(f"technologies: {technologies}")
             programmer.set_technology_list(technologies)
             programmer.save()
             self.perform_update(serializer)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def destroy(self, request, *args, **kwargs):
-        programmer = self.get_object()
-        self.perform_destroy(programmer)
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def perform_create(self, serializer):
-        serializer.save()
-
-    def perform_update(self, serializer):
-        serializer.save()
-
-    def perform_destroy(self, instance):
-        instance.delete()

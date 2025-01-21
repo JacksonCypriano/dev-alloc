@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import Project, ProjectAllocation
 from apps.choices import ProjectStatus
-from apps.utils.utils import validate_date
 from django.utils import timezone
 from decimal import Decimal
 from django.db.models import Sum
@@ -24,12 +23,6 @@ class ProjectSerializer(serializers.ModelSerializer):
             if not isinstance(tech, str):
                 raise serializers.ValidationError(f"Each technology must be a string, got {type(tech)}.")
         return value
-
-    def validate_start_date(self, value):
-        return validate_date(value)
-
-    def validate_end_date(self, value):
-        return validate_date(value)
 
 class ProjectAllocationSerializer(serializers.ModelSerializer):
     class Meta:
